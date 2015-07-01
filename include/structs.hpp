@@ -4,14 +4,12 @@
 
 typedef struct
 {
-  int num_nodes = 0; 
-  int size = 0;
+  int size;
   double **data;
 } matrix_t;
 
-inline matrix_t* MatrixCreate (int num_nodes)
+inline matrix_t* MatrixCreate (int size)
 {
-  size = num_nodes * (num_nodes-1)/ 2;
   matrix_t *matrix = new matrix_t;
   matrix->size = size;
   matrix->data = new double*[size];
@@ -37,13 +35,12 @@ inline void MatrixDelete (matrix_t *matrix)
 
 typedef struct
 {
-  int size = 0;
+  int size;
   int *data;
 } vector_t;
 
-inline vector_t* VectorCreate (int num_nodes)
+inline vector_t* VectorCreate (int size)
 {
-  size = num_nodes * (num_nodes-1)/ 2;
   vector_t *vector = new vector_t;
   vector->size = size;
   vector->data = new int[size];
