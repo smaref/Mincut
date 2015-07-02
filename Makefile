@@ -10,7 +10,7 @@ OBJECTFILES= ${OBJECTDIR}/function.o
 CFLAGS=
 
 # CC Compiler
-CXX=icpc
+CXX=clang++
 
 # CC Compiler Flags
 CCFLAGS=
@@ -25,8 +25,8 @@ mkdir:
 func: $(SRC)/function.cpp
 	$(CXX) -c $(SRC)/function.cpp -I$(INC) -o $(OBJECTDIR)/function.o
 
-test: func
-	$(CXX) -c $(TEST)/test.cpp -I$(INC) -o $(OBJECTDIR)/test.o
+test: func $(TEST)/create_matrix_vector.cpp
+	$(CXX) -c $(TEST)/create_matrix_vector.cpp -I$(INC) -o $(OBJECTDIR)/test.o
 	$(CXX) -o $(BIN)/test $(OBJECTDIR)/test.o $(OBJECTDIR)/function.o
 
 clean:
