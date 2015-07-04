@@ -1,10 +1,10 @@
-OBJECTDIR=obj
+OBJ=obj
 BIN=bin
 SRC=src
 INC=include
 TEST=test
-OBJECTFILES= ${OBJECTDIR}/function.o
-
+#OBJECTFILES= ${OBJECTDIR}/function.o ${OBJECTDIR}/build_components.o
+OBJECTFILES = $(OBJ)/*
 
 # C Compiler Flags
 CFLAGS=
@@ -16,19 +16,34 @@ CXX=clang++
 CCFLAGS=
 CXXFLAGS=
 
-all: mkdir func test
+all: mkdir build_components obj_func test_build_edge_vector test_objec_gradient
 
 mkdir:
 	mkdir -p obj
 	mkdir -p bin
 
-func: $(SRC)/function.cpp
-	$(CXX) -c $(SRC)/function.cpp -I$(INC) -o $(OBJECTDIR)/function.o
+build_comp: $(SRC)/build_components.cpp
+	$(CXX) -c $< -I$(INC) -o $(OBJ)/$@.o
+	
+obj_func: $(SRC)/obj_func.cpp
+	$(CXX) -c $< -I$(INC) -o $(OBJ)/$@.o
+	
 
-test: func $(TEST)/create_matrix_vector.cpp
-	$(CXX) -c $(TEST)/create_matrix_vector.cpp -I$(INC) -o $(OBJECTDIR)/test.o
-	$(CXX) -o $(BIN)/test $(OBJECTDIR)/test.o $(OBJECTDIR)/function.o
+test_build_edge_vector: $(TEST)/edge_vec.cpp build_comp
+	$(CXX) -c $< -I$(INC) -o $(OBJ)/$@.o
+	$(CXX) -o $(BIN)/$@ $(OBJ)/$@.o $(OBJ)/build_comp.o
+	
+test_mat_coeff: $(TEST)/coeff.cpp build_comp
+	$(CXX) -c $< -I$(INC) -o $(OBJ)/$@.o
+	$(CXX) -o $(BIN)/$@ $(OBJ)/$@.o $(OBJ)/build_comp.o
+	
+test_objec_gradient: $(TEST)/create_vector_base.cpp obj_func
+	$(CXX) -c $< -I$(INC) -o $(OBJ)/$@.o
+	$(CXX) -o $(BIN)/$@ $(OBJ)/$@.o $(OBJ)/obj_func.o
+#test_objec_gradient: $(TEST)/create_matrix_vector.cpp obj_func
+#	$(CXX) -c $< -I$(INC) -o $(OBJ)/$@.o
+#	$(CXX) -o $(BIN)/$@ $(OBJ)/$@.o $(OBJ)/obj_func.o
 
 clean:
-	rm -if $(OBJECTDIR)/*
+	rm -if $(OBJ)/*
 	rm -if $(BIN)/*
